@@ -1,0 +1,1 @@
+include ':app', ':com.ap.framework', ':com.ap.framework.sdk.huawei'
