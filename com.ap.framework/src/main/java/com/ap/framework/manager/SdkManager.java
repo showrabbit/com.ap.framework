@@ -1,11 +1,22 @@
-package com.ap.framework.sdk;
+package com.ap.framework.manager;
+
+import com.ap.framework.base.Config;
+import com.ap.framework.base.IMsgListener;
+import com.ap.framework.sdk.IPay;
+import com.ap.framework.sdk.IPayListener;
+import com.ap.framework.sdk.IUser;
+import com.ap.framework.sdk.IUserListener;
+import com.ap.framework.sdk.SdkEvent;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ClassNotFoundException;
 
 /**
  * Created by aplysia on 2017/3/5.
  */
-public class SdkManager implements IUserListener ,IPayListener {
+public class SdkManager implements IUserListener,IPayListener,IMsgListener {
     // 单例对象
     private static SdkManager m_Instance;
     // 包含的sdk
@@ -15,14 +26,13 @@ public class SdkManager implements IUserListener ,IPayListener {
 
     private SdkManager()
     {
-
+        Init();
     }
 
     public static SdkManager GetInstance()
     {
         if(m_Instance == null)
         {
-
             m_Instance = new SdkManager();
         }
         return  m_Instance;
@@ -32,8 +42,7 @@ public class SdkManager implements IUserListener ,IPayListener {
      */
     protected void Init()
     {
-        // 读取sdk配置
-        // 设置sdk
+        MsgManager.GetInstance().AddListener("Sdk",SdkManager.this);
     }
     protected void SetUser(String className)
     {
@@ -75,7 +84,12 @@ public class SdkManager implements IUserListener ,IPayListener {
 
     @Override
     public void OnInit(Object sender, SdkEvent e) {
-
+        // 读取sdk配置
+        // 设置sdk
+        String user = Config.GetInstance().GetValue("SdkUser");
+        SetUser(user);
+        String pay = Config.GetInstance().GetValue("SdkPay");
+        SetPay(pay);
     }
 
     @Override
@@ -100,6 +114,31 @@ public class SdkManager implements IUserListener ,IPayListener {
 
     @Override
     public void OnPay(Object sender, SdkEvent event) {
+
+    }
+
+    @Override
+    public void Accept(String type, String param) {
+        try {
+            JSONObject obj = new JSONObject(param);
+            String fun = obj.getString("Fun");
+            String value = obj.getString("Value");
+            if(fun.contentEquals("Login")){
+                m_User.Login(value);
+            }
+            else if(fun.contentEquals("Logout")){
+                m_User.Logout(value);
+            }
+            else if(fun.contentEquals("SwitchLogin")){
+                m_User.SwitchLogin(value);
+            }
+            else if(fun.contentEquals("Pay")){
+                m_Pay.Pay(value);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 }

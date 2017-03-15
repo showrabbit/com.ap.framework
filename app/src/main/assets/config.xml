@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+    <Setting Key = "SdkUser" Value  = "com.ap.framework.sdk.huawei.HuaweiUser"></Setting>
+    <Setting Key="SdkPay" Value="com.ap.framework.sdk.huawei.HuaweiPay"></Setting>
+</Settings>
