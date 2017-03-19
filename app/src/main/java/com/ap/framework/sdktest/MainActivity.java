@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.ap.framework.base.Config;
 import com.ap.framework.base.Context;
 import com.ap.framework.manager.MsgManager;
+import com.ap.framework.manager.SdkManager;
 import com.unity3d.player.UnityPlayerActivity;
 
 public class MainActivity extends UnityPlayerActivity {
@@ -19,6 +20,7 @@ public class MainActivity extends UnityPlayerActivity {
 
     private void Init(){
         Context.GetInstance().CurrentActivity = MainActivity.this;
+        SdkManager.GetInstance();
     }
 
     public static void SendMsg(Integer type,String param){

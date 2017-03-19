@@ -23,6 +23,7 @@ public class Config {
 
     private Config() {
         m_Settings = new HashMap<String, String>();
+        Init();
     }
 
     public static Config GetInstance() {
@@ -38,7 +39,7 @@ public class Config {
     private void Init() {
         // 读取文件
         try {
-            InputStream is =  Context.GetInstance().CurrentActivity.getResources().getAssets().open("Cnfig.xml");
+            InputStream is =  Context.GetInstance().CurrentActivity.getResources().getAssets().open("config.xml");
             Parse(is);
         } catch (IOException e) {
             e.printStackTrace();

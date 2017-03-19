@@ -41,14 +41,25 @@ public class SdkManager implements IUserListener,IPayListener,IMsgListener {
     /*
     初始化
      */
-    protected void Init()
-    {
+    protected void Init() {
         MsgManager.GetInstance().AddListener(EventTypes.SdkLogin,SdkManager.this);
         MsgManager.GetInstance().AddListener(EventTypes.SdkLogout,SdkManager.this);
         MsgManager.GetInstance().AddListener(EventTypes.SdkPay,SdkManager.this);
         MsgManager.GetInstance().AddListener(EventTypes.SdkShowAccountCenter,SdkManager.this);
         MsgManager.GetInstance().AddListener(EventTypes.SdkSwitchLogin,SdkManager.this);
+
+        InitConfig();
     }
+
+    protected void InitConfig(){
+        // 读取sdk配置
+        // 设置sdk
+        String user = Config.GetInstance().GetValue("SdkUser");
+        SetUser(user);
+        String pay = Config.GetInstance().GetValue("SdkPay");
+        SetPay(pay);
+    }
+
     protected void SetUser(String className)
     {
         try
@@ -89,12 +100,7 @@ public class SdkManager implements IUserListener,IPayListener,IMsgListener {
 
     @Override
     public void OnInited(Object sender, SdkEvent e) {
-        // 读取sdk配置
-        // 设置sdk
-        String user = Config.GetInstance().GetValue("SdkUser");
-        SetUser(user);
-        String pay = Config.GetInstance().GetValue("SdkPay");
-        SetPay(pay);
+
         try {
             MsgManager.GetInstance().SendMsg(EventTypes.SdkInited, e.ToEventString());
         } catch (JSONException el) {
@@ -160,6 +166,9 @@ public class SdkManager implements IUserListener,IPayListener,IMsgListener {
                 m_User.SwitchLogin(param);
             } else if (type == EventTypes.SdkPay) {
                 m_Pay.Pay(param);
+            } else if(type == EventTypes.SdkInit){
+                InitConfig();
+                m_User.Init(param);
             }
         } catch (JSONException e) {
             e.printStackTrace();
