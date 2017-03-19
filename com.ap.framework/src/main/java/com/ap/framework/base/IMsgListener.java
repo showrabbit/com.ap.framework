@@ -5,5 +5,5 @@ package com.ap.framework.base;
  */
 
 public interface IMsgListener {
-    void Accept(String type,String param);
+    void Accept(Integer type,String param);
 }

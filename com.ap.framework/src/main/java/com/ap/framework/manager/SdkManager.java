@@ -1,6 +1,7 @@
 package com.ap.framework.manager;
 
 import com.ap.framework.base.Config;
+import com.ap.framework.base.EventTypes;
 import com.ap.framework.base.IMsgListener;
 import com.ap.framework.sdk.IPay;
 import com.ap.framework.sdk.IPayListener;
@@ -42,7 +43,11 @@ public class SdkManager implements IUserListener,IPayListener,IMsgListener {
      */
     protected void Init()
     {
-        MsgManager.GetInstance().AddListener("Sdk",SdkManager.this);
+        MsgManager.GetInstance().AddListener(EventTypes.SdkLogin,SdkManager.this);
+        MsgManager.GetInstance().AddListener(EventTypes.SdkLogout,SdkManager.this);
+        MsgManager.GetInstance().AddListener(EventTypes.SdkPay,SdkManager.this);
+        MsgManager.GetInstance().AddListener(EventTypes.SdkShowAccountCenter,SdkManager.this);
+        MsgManager.GetInstance().AddListener(EventTypes.SdkSwitchLogin,SdkManager.this);
     }
     protected void SetUser(String className)
     {
@@ -83,62 +88,81 @@ public class SdkManager implements IUserListener,IPayListener,IMsgListener {
 
 
     @Override
-    public void OnInit(Object sender, SdkEvent e) {
+    public void OnInited(Object sender, SdkEvent e) {
         // 读取sdk配置
         // 设置sdk
         String user = Config.GetInstance().GetValue("SdkUser");
         SetUser(user);
         String pay = Config.GetInstance().GetValue("SdkPay");
         SetPay(pay);
-    }
-
-    @Override
-    public void OnLogin(Object sender, SdkEvent e) {
-
-    }
-
-    @Override
-    public void OnLogout(Object sender, SdkEvent e) {
-
-    }
-
-    @Override
-    public void OnSwitchLogin(Object sender, SdkEvent e) {
-
-    }
-
-    @Override
-    public void OnShowAccountCenter(Object sender, SdkEvent e) {
-
-    }
-
-    @Override
-    public void OnPay(Object sender, SdkEvent event) {
-
-    }
-
-    @Override
-    public void Accept(String type, String param) {
         try {
-            JSONObject obj = new JSONObject(param);
-            String fun = obj.getString("Fun");
-            String value = obj.getString("Value");
-            if(fun.contentEquals("Login")){
-                m_User.Login(value);
-            }
-            else if(fun.contentEquals("Logout")){
-                m_User.Logout(value);
-            }
-            else if(fun.contentEquals("SwitchLogin")){
-                m_User.SwitchLogin(value);
-            }
-            else if(fun.contentEquals("Pay")){
-                m_Pay.Pay(value);
+            MsgManager.GetInstance().SendMsg(EventTypes.SdkInited, e.ToEventString());
+        } catch (JSONException el) {
+            el.printStackTrace();
+        }
+    }
+
+    @Override
+    public void OnLogined(Object sender, SdkEvent e) {
+
+        try {
+            MsgManager.GetInstance().SendMsg(EventTypes.SdkLogined, e.ToEventString());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void OnLogouted(Object sender, SdkEvent e) {
+        try {
+            MsgManager.GetInstance().SendMsg(EventTypes.SdkLogouted, e.ToEventString());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void OnSwitchLogined(Object sender, SdkEvent e) {
+        try {
+            MsgManager.GetInstance().SendMsg(EventTypes.SdkSwitchLogined, e.ToEventString());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void OnShowAccountCentered(Object sender, SdkEvent e) {
+        try {
+            MsgManager.GetInstance().SendMsg(EventTypes.SdkSwitchLogined, e.ToEventString());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void OnPayed(Object sender, SdkEvent e) {
+        try {
+            MsgManager.GetInstance().SendMsg(EventTypes.SdkPayed, e.ToEventString());
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    @Override
+    public void Accept(Integer type, String param) {
+        try {
+
+            if (type == EventTypes.SdkLogin) {
+                m_User.Login(param);
+            } else if (type == EventTypes.SdkLogout) {
+                m_User.Logout(param);
+            } else if (type == EventTypes.SdkSwitchLogin) {
+                m_User.SwitchLogin(param);
+            } else if (type == EventTypes.SdkPay) {
+                m_Pay.Pay(param);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 }

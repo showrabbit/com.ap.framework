@@ -1,6 +1,7 @@
 package com.ap.framework.manager;
 
 import com.ap.framework.base.IMsgListener;
+import com.unity3d.player.UnityPlayer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.HashMap;
  */
 
 public class MsgManager {
-    private HashMap<String,ArrayList<IMsgListener>> m_MsgListener;
+    private HashMap<Integer,ArrayList<IMsgListener>> m_MsgListener;
 
     private static MsgManager m_Instance;
 
@@ -28,7 +29,7 @@ public class MsgManager {
         m_MsgListener = new HashMap<>();
     }
 
-    public void AddListener(String type,IMsgListener listener){
+    public void AddListener(Integer type,IMsgListener listener){
         if(m_MsgListener.containsKey(type) == false ){
             m_MsgListener.put(type, new ArrayList<IMsgListener>());
         }
@@ -41,7 +42,7 @@ public class MsgManager {
         }
     }
     //接收来自UNITY的消息
-    public void AcceptMsg(String type,String param) {
+    public void AcceptMsg(Integer type,String param) {
         if(m_MsgListener.containsKey(type)) {
             for (IMsgListener i : m_MsgListener.get(type)) {
                 i.Accept(type,param);
@@ -49,7 +50,8 @@ public class MsgManager {
         }
     }
     //发送消息到UNITY
-    public void SendMsg(String type,String parma){
-
+    public void SendMsg(Integer type,String parma){
+        String msg = String.format("%d@#%s",type,parma);
+        UnityPlayer.UnitySendMessage("Managers","AndroidAcceptMessage",msg);
     }
 }

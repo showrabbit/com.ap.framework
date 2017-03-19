@@ -5,5 +5,5 @@ package com.ap.framework.sdk;
  */
 
 public interface IPayListener {
-    void OnPay(Object sender, SdkEvent event);
+    void OnPayed(Object sender, SdkEvent event);
 }

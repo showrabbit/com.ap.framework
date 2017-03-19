@@ -34,7 +34,7 @@ public class HuaweiUser extends User {
                     event.Ok = false;
                     event.Error = result.description;
                 }
-                m_Listener.OnInit(HuaweiUser.this, event);
+                m_Listener.OnInited(HuaweiUser.this, event);
             }
 
             @Override
@@ -62,7 +62,7 @@ public class HuaweiUser extends User {
                     event.Ok = false;
                     event.Error = result.description;
                 }
-                m_Listener.OnLogin(HuaweiUser.this, event);
+                m_Listener.OnLogined(HuaweiUser.this, event);
             }
         };
         JSONObject obj = new JSONObject(param);

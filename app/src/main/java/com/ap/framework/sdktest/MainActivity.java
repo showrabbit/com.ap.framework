@@ -21,7 +21,7 @@ public class MainActivity extends UnityPlayerActivity {
         Context.GetInstance().CurrentActivity = MainActivity.this;
     }
 
-    public static void SendMsg(String type,String param){
+    public static void SendMsg(Integer type,String param){
         MsgManager.GetInstance().AcceptMsg(type,param);
     }
 }

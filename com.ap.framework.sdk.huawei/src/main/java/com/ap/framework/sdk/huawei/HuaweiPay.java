@@ -2,6 +2,7 @@ package com.ap.framework.sdk.huawei;
 
 import com.ap.framework.base.Context;
 import com.ap.framework.sdk.Pay;
+import com.ap.framework.sdk.SdkEvent;
 import com.huawei.gameservice.sdk.GameServiceSDK;
 import com.huawei.gameservice.sdk.api.PayResult;
 import com.huawei.gameservice.sdk.api.Result;
@@ -27,6 +28,14 @@ public class HuaweiPay extends Pay {
                 super.onResult(result);
 
                 PayResult pay = (PayResult) result;
+                SdkEvent event = new SdkEvent();
+                if(pay.rtnCode == 0){
+                    event.Ok = true;
+                } else {
+                    event.Ok = false;
+                    event.Error = pay.description;
+                }
+                m_Listener.OnPayed(HuaweiPay.this,event);
             }
 
             @Override
