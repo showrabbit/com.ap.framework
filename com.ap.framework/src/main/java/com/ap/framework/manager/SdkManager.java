@@ -47,8 +47,6 @@ public class SdkManager implements IUserListener,IPayListener,IMsgListener {
         MsgManager.GetInstance().AddListener(EventTypes.SdkPay,SdkManager.this);
         MsgManager.GetInstance().AddListener(EventTypes.SdkShowAccountCenter,SdkManager.this);
         MsgManager.GetInstance().AddListener(EventTypes.SdkSwitchLogin,SdkManager.this);
-
-        InitConfig();
     }
 
     protected void InitConfig(){
